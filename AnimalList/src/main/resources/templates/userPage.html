@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${user.getLogin()}">Login</title>
+</head>
+<body>
+
+<h1>
+    <b style="color: #774b9d">
+        <center>Animal List</center>
+    </b>
+</h1>
+
+<b>
+    <center>
+        <h2 style="color: #985ccb" th:text="${user.getLogin()}">
+            UserName
+        </h2>
+    </center>
+</b>
+
+<br>
+
+<div th:each="animal : ${animals}">
+    <a th:href="@{/animal/{id} (id = ${animal.getId()})}" th:text="${animal.getName()}">pet</a>
+    <br>
+    <br>
+</div>
+
+<br>
+
+
+<form th:method="GET" th:action="@{user/addAnimal}" th:object="${user}">
+    <center>
+        <input type="submit" value="Add pet" style="color:#49cb2c; font-size: 400%"/>
+    </center>
+</form>
+<br>
+<br>
+<form th:method="GET" th:action="@{/}">
+    <center>
+        <input type="submit" value="Log out"/>
+    </center>
+</form>
+<br>
+<br>
+
+</body>
+</html>
