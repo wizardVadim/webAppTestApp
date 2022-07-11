@@ -1,6 +1,11 @@
 package com.example.animallist.model.animal;
 
+import com.example.animallist.controllers.AnimalController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import javax.validation.constraints.Max;
@@ -13,14 +18,16 @@ import java.util.Date;
 @Entity
 @Table(name = "animals")
 public class Animal {
+
     public Animal() {
     }
 
-    public Animal(int typeId, Date dateOfBorn, int id, String name) {
+    public Animal(int typeId, Date dateOfBorn, int id, String name, String type) {
         this.typeId = typeId;
         this.dateOfBorn = dateOfBorn;
         this.id = id;
         this.name = name;
+        this.type = type;
     }
 
     @Column(name = "typeid")
@@ -28,6 +35,17 @@ public class Animal {
     @Min(0)
     @Max(10)
     private int typeId;
+
+    @Column(name = "type")
+    private String type;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     @Column(name = "dateofborn")
     @DateTimeFormat(pattern = "yyyy-MM-dd")

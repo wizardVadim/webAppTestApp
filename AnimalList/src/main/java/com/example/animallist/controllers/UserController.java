@@ -61,6 +61,8 @@ public class UserController {
             return "new";
         }
 
+        animal.setType(animalRepository.getType(animal.getTypeId()));
+
         animalRepository.save(animal);
         Link link = new Link();
         link.setAnimalId(animal.getId());

@@ -16,6 +16,10 @@ import java.util.Optional;
 @RequestMapping("/login")
 public class LoginController {
 
+    private int tryValue;
+
+    private long firstTry;
+
     private static int enterUserid;
 
     public static int getEnterUserid() {
@@ -39,6 +43,10 @@ public class LoginController {
     public String checkPass(@ModelAttribute("user") @Valid User user,
                             BindingResult bindingResult, Model model) {
 
+        if(isLastTry()) {
+            bindingResult.addError(new FieldError("user", "password", "You have exceeded the maximum number of attempts"));
+        }
+
         Integer id = userRepository.findIdByLogin(user.getLogin());
 
         if (id == null) {
@@ -55,12 +63,28 @@ public class LoginController {
         if (userRepository.findPasswordByLogin(user.getLogin()).equals(user.getPassword())) {
             setEnterUserid(user.getId());
             model.addAttribute("user", user);
+            tryValue = 0;
+            firstTry = 0;
             return "redirect:/user";
         } else {
+            tryValue++;
+            if (tryValue == 1) {
+                firstTry = System.currentTimeMillis();
+            }
             bindingResult.addError(new FieldError("user", "password", "Unknown password"));
         }
 
         return "login";
+    }
+
+    private boolean isLastTry(){
+        if (System.currentTimeMillis() - firstTry > 3600000) {
+            tryValue = 0;
+        }
+        if (tryValue > 9) {
+            return true;
+        }
+        return false;
     }
 
 
